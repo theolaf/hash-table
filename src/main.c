@@ -4,7 +4,7 @@
 #include "utils.c"
 
 int main() {
-  printf("%d\n", hash("cat", 151, 53));
-  printf("%d\n", hash("cat", 163, 53));
+  printf("%d\n", get_key_hash("cat", 53, 0));
+  printf("%d\n", get_key_hash("cat", 53, 1));
   return 0;
 }
