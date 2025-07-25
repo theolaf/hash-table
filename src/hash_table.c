@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static kv_pair* ht_new_item(const char* k, const char* v) {
+static kv_pair* new_item(const char* k, const char* v) {
   kv_pair* i = malloc(sizeof(kv_pair));
 
   i->key = strdup(k);
@@ -12,13 +12,13 @@ static kv_pair* ht_new_item(const char* k, const char* v) {
   return i;
 }
 
-static void ht_del_item(kv_pair* i) {
+static void delete_item(kv_pair* i) {
   free(i->key);
   free(i->value);
   free(i);
 }
 
-hash_table* ht_new() {
+hash_table* new_hash_table() {
   hash_table* ht = malloc(sizeof(hash_table));
 
   ht->size = 53;
@@ -28,7 +28,7 @@ hash_table* ht_new() {
   return ht;
 }
 
-void delete_ht_hash_table(hash_table* ht) {
+void delete_hash_table(hash_table* ht) {
   for (int i = 0; i < ht->size; i++) {
     kv_pair* item = ht->items[i];
     if (item != NULL) {
