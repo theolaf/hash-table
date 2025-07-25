@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-#include "utils.h"
+#include "hash_table.c"
+#include "utils.c"
 
 int main() {
   printf("%d\n", hash("cat", 151, 53));
