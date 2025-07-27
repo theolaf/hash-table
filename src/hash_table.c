@@ -50,6 +50,11 @@ void delete_hash_table(hash_table *ht)
 
 void insert_kv_pair(hash_table *ht, const char *key, const char *value)
 {
+    if (ht->count == ht->size)
+    {
+        return;
+    }
+
     kv_pair *item = new_item(key, value);
     kv_pair *current_item;
     int i = 0, index;
