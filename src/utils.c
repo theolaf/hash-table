@@ -9,7 +9,7 @@ static int hash(const char* string, const int prime, const int num_buckets) {
     hashed += (long)pow(prime, string_length - (i + 1)) * string[i];
   }
 
-  return (int)hashed % num_buckets;
+  return (int)(hashed % num_buckets);
 }
 
 int get_key_hash(const char* key, const int num_buckets, const int retries) {
