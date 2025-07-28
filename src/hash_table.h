@@ -8,3 +8,7 @@ typedef struct {
     int count;
     kv_pair** items;
 } hash_table;
+
+hash_table* ht_new();
+
+void delete_ht_hash_table(hash_table* ht);

@@ -1,0 +1,1 @@
+int hash(const char* string, const int prime, const int num_buckets);
