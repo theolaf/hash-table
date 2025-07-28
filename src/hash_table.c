@@ -38,7 +38,7 @@ void delete_hash_table(hash_table *ht)
     for (int i = 0; i < ht->size; i++)
     {
         kv_pair *item = ht->items[i];
-        if (item != NULL)
+        if (item)
         {
             delete_item(item);
         }
@@ -50,11 +50,6 @@ void delete_hash_table(hash_table *ht)
 
 void insert_kv_pair(hash_table *ht, const char *key, const char *value)
 {
-    if (ht->count == ht->size)
-    {
-        return;
-    }
-
     kv_pair *item = new_item(key, value);
     kv_pair *current_item;
     int i = 0, index;
@@ -64,7 +59,19 @@ void insert_kv_pair(hash_table *ht, const char *key, const char *value)
         index = get_key_hash(item->key, ht->size, i);
         current_item = ht->items[index];
         i++;
-    } while (current_item != NULL);
+
+        if (!current_item)
+        { // if current item does not exist, no need for the check below
+            continue;
+        }
+
+        if (strcmp(current_item->key, key) == 0)
+        { // removing previous item if key already exist
+            delete_item(current_item);
+            current_item = NULL;
+            ht->count--;
+        }
+    } while (current_item);
 
     ht->items[index] = item;
     ht->count++;
