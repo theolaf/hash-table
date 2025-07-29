@@ -3,6 +3,8 @@ CFLAGS = -Iinclude
 SRC = src/main.c src/hash_table.c src/utils.c
 TARGET = build/main.o
 
+.PHONY: build build-debug run debugger clean
+
 build:
 	mkdir -p build
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
@@ -14,7 +16,7 @@ build-debug:
 run:
 	./$(TARGET)
 
-start-debugger:
+debugger:
 	lldb $(TARGET)
 
 clean:
