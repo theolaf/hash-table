@@ -5,7 +5,7 @@
 
 #include "utils.h"
 
-static kv_pair HT_DELETED_ITEM = {NULL, NULL};
+static kv_pair DELETED_ITEM = {NULL, NULL};
 
 static kv_pair *new_item(const char *k, const char *v)
 {
@@ -40,7 +40,7 @@ void delete_hash_table(hash_table *ht)
     for (int i = 0; i < ht->size; i++)
     {
         kv_pair *item = ht->items[i];
-        if (item && item != &HT_DELETED_ITEM)
+        if (item && item != &DELETED_ITEM)
         {
             delete_item(item);
         }
@@ -104,13 +104,10 @@ void delete_kv_pair(hash_table *ht, const char *key)
     int i = 1;
     while (item)
     {
-        if (item != &HT_DELETED_ITEM)
+        if (strcmp(item->key, key) == 0)
         {
-            if (strcmp(item->key, key) == 0)
-            {
-                delete_item(item);
-                ht->items[index] = &HT_DELETED_ITEM;
-            }
+            delete_item(item);
+            ht->items[index] = &DELETED_ITEM;
         }
         index = get_key_hash(key, ht->size, i);
         item = ht->items[index];
