@@ -14,7 +14,7 @@ build-debug:
 run:
 	./$(TARGET)
 
-start-debug:
+start-debugger:
 	lldb $(TARGET)
 
 clean:
