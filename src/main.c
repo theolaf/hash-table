@@ -19,6 +19,10 @@ int main()
 
     printf("The value for key 'hello' is now: %s\n", search_kv_pair(ht, "hello"));
 
+    printf("Deleting the item for key 'hello'...\n");
+    delete_kv_pair(ht, "hello");
+    printf("New count value: %d\n", ht->count);
+
     printf("Deleting the hash table...\n");
     delete_hash_table(ht);
     return 0;

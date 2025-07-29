@@ -5,6 +5,8 @@
 
 #include "utils.h"
 
+static kv_pair HT_DELETED_ITEM = {NULL, NULL};
+
 static kv_pair *new_item(const char *k, const char *v)
 {
     kv_pair *i = malloc(sizeof(kv_pair));
@@ -38,7 +40,7 @@ void delete_hash_table(hash_table *ht)
     for (int i = 0; i < ht->size; i++)
     {
         kv_pair *item = ht->items[i];
-        if (item)
+        if (item && item != &HT_DELETED_ITEM)
         {
             delete_item(item);
         }
@@ -93,4 +95,26 @@ char *search_kv_pair(hash_table *ht, const char *key)
         i++;
     }
     return NULL;
+}
+
+void delete_kv_pair(hash_table *ht, const char *key)
+{
+    int index = get_key_hash(key, ht->size, 0);
+    kv_pair *item = ht->items[index];
+    int i = 1;
+    while (item)
+    {
+        if (item != &HT_DELETED_ITEM)
+        {
+            if (strcmp(item->key, key) == 0)
+            {
+                delete_item(item);
+                ht->items[index] = &HT_DELETED_ITEM;
+            }
+        }
+        index = get_key_hash(key, ht->size, i);
+        item = ht->items[index];
+        i++;
+    }
+    ht->count--;
 }
