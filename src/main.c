@@ -12,8 +12,12 @@ int main()
     printf("Inserting a new item {hello: world}...\n");
     insert_kv_pair(ht, "hello", "world");
 
+    printf("The value for key 'hello' is: %s\n", search_kv_pair(ht, "hello"));
+
     printf("Replacing the value for existing key {hello: bye}...\n");
     insert_kv_pair(ht, "hello", "bye");
+
+    printf("The value for key 'hello' is now: %s\n", search_kv_pair(ht, "hello"));
 
     printf("Deleting the hash table...\n");
     delete_hash_table(ht);

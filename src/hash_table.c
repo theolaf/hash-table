@@ -76,3 +76,21 @@ void insert_kv_pair(hash_table *ht, const char *key, const char *value)
     ht->items[index] = item;
     ht->count++;
 }
+
+char *search_kv_pair(hash_table *ht, const char *key)
+{
+    int index = get_key_hash(key, ht->size, 0);
+    kv_pair *item = ht->items[index];
+    int i = 1;
+    while (item)
+    {
+        if (strcmp(item->key, key) == 0)
+        {
+            return item->value;
+        }
+        index = get_key_hash(key, ht->size, i);
+        item = ht->items[index];
+        i++;
+    }
+    return NULL;
+}
