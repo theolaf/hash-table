@@ -1,5 +1,6 @@
 #include "hash_table.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -84,16 +85,19 @@ char *search_kv_pair(hash_table *ht, const char *key)
     int index = get_key_hash(key, ht->size, 0);
     kv_pair *item = ht->items[index];
     int i = 1;
+
     while (item)
     {
         if (strcmp(item->key, key) == 0)
         {
             return item->value;
         }
+
         index = get_key_hash(key, ht->size, i);
         item = ht->items[index];
         i++;
     }
+
     return NULL;
 }
 
@@ -102,16 +106,24 @@ void delete_kv_pair(hash_table *ht, const char *key)
     int index = get_key_hash(key, ht->size, 0);
     kv_pair *item = ht->items[index];
     int i = 1;
+    bool key_found = false;
+
     while (item)
     {
         if (strcmp(item->key, key) == 0)
         {
             delete_item(item);
             ht->items[index] = &DELETED_ITEM;
+            key_found = true;
         }
+
         index = get_key_hash(key, ht->size, i);
         item = ht->items[index];
         i++;
     }
-    ht->count--;
+
+    if (key_found)
+    {
+        ht->count--;
+    }
 }
