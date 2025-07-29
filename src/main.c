@@ -1,7 +1,6 @@
 #include <stdio.h>
 
-#include "hash_table.c"
-#include "utils.c"
+#include "hash_table.h"
 
 int main()
 {
