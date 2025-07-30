@@ -16,7 +16,7 @@ static int hash(const char *string, const int prime, const int num_buckets)
     return (int)(hashed % num_buckets);
 }
 
-int get_key_hash(const char *key, const int num_buckets, const int retries)
+int get_hash(const char *key, const int num_buckets, const int retries)
 {
     const int hashed_a = hash(key, 151, num_buckets);
     const int hashed_b = hash(key, 163, num_buckets);

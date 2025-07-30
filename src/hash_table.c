@@ -6,11 +6,11 @@
 
 #include "utils.h"
 
-static KeyValuePair DELETED_ITEM = {NULL, NULL};
+static kv_pair_t DELETED_ITEM = {NULL, NULL};
 
-static KeyValuePair *new_item(const char *k, const char *v)
+static kv_pair_t *create_kv_pair(const char *k, const char *v)
 {
-    KeyValuePair *i = malloc(sizeof(KeyValuePair));
+    kv_pair_t *i = malloc(sizeof(kv_pair_t));
 
     i->key = strdup(k);
     i->value = strdup(v);
@@ -18,32 +18,32 @@ static KeyValuePair *new_item(const char *k, const char *v)
     return i;
 }
 
-static void delete_item(KeyValuePair *i)
+static void delete_kv_pair(kv_pair_t *i)
 {
     free(i->key);
     free(i->value);
     free(i);
 }
 
-HashTable *new_hash_table()
+hash_table_t *create_hash_table()
 {
-    HashTable *ht = malloc(sizeof(HashTable));
+    hash_table_t *ht = malloc(sizeof(hash_table_t));
 
     ht->size = 53;
     ht->count = 0;
-    ht->items = calloc((size_t)ht->size, sizeof(KeyValuePair *));
+    ht->items = calloc((size_t)ht->size, sizeof(kv_pair_t *));
 
     return ht;
 }
 
-void delete_hash_table(HashTable *ht)
+void delete_hash_table(hash_table_t *ht)
 {
     for (int i = 0; i < ht->size; i++)
     {
-        KeyValuePair *item = ht->items[i];
+        kv_pair_t *item = ht->items[i];
         if (item && item != &DELETED_ITEM)
         {
-            delete_item(item);
+            delete_kv_pair(item);
         }
     }
 
@@ -51,15 +51,15 @@ void delete_hash_table(HashTable *ht)
     free(ht);
 }
 
-void insert_kv_pair(HashTable *ht, const char *key, const char *value)
+void hash_table_insert(hash_table_t *ht, const char *key, const char *value)
 {
-    KeyValuePair *item = new_item(key, value);
-    KeyValuePair *current_item;
+    kv_pair_t *item = create_kv_pair(key, value);
+    kv_pair_t *current_item;
     int i = 0, index;
 
     do
     {
-        index = get_key_hash(item->key, ht->size, i);
+        index = get_hash(item->key, ht->size, i);
         current_item = ht->items[index];
         i++;
 
@@ -70,7 +70,7 @@ void insert_kv_pair(HashTable *ht, const char *key, const char *value)
 
         if (strcmp(current_item->key, key) == 0)
         { // removing previous item if key already exist
-            delete_item(current_item);
+            delete_kv_pair(current_item);
             current_item = NULL;
             ht->count--;
         }
@@ -80,10 +80,10 @@ void insert_kv_pair(HashTable *ht, const char *key, const char *value)
     ht->count++;
 }
 
-char *search_kv_pair(HashTable *ht, const char *key)
+char *hash_table_search(hash_table_t *ht, const char *key)
 {
-    int index = get_key_hash(key, ht->size, 0);
-    KeyValuePair *item = ht->items[index];
+    int index = get_hash(key, ht->size, 0);
+    kv_pair_t *item = ht->items[index];
     int i = 1;
 
     while (item)
@@ -93,7 +93,7 @@ char *search_kv_pair(HashTable *ht, const char *key)
             return item->value;
         }
 
-        index = get_key_hash(key, ht->size, i);
+        index = get_hash(key, ht->size, i);
         item = ht->items[index];
         i++;
     }
@@ -101,10 +101,10 @@ char *search_kv_pair(HashTable *ht, const char *key)
     return NULL;
 }
 
-void delete_kv_pair(HashTable *ht, const char *key)
+void hash_table_remove(hash_table_t *ht, const char *key)
 {
-    int index = get_key_hash(key, ht->size, 0);
-    KeyValuePair *item = ht->items[index];
+    int index = get_hash(key, ht->size, 0);
+    kv_pair_t *item = ht->items[index];
     int i = 1;
     bool key_found = false;
 
@@ -112,12 +112,12 @@ void delete_kv_pair(HashTable *ht, const char *key)
     {
         if (strcmp(item->key, key) == 0)
         {
-            delete_item(item);
+            delete_kv_pair(item);
             ht->items[index] = &DELETED_ITEM;
             key_found = true;
         }
 
-        index = get_key_hash(key, ht->size, i);
+        index = get_hash(key, ht->size, i);
         item = ht->items[index];
         i++;
     }

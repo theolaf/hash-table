@@ -1,21 +1,24 @@
 #pragma once
 
-typedef struct
+typedef struct KVPair kv_pair_t;
+typedef struct HashTable hash_table_t;
+
+struct KVPair
 {
     char *key;
     char *value;
-} KeyValuePair;
+};
 
-typedef struct
+struct HashTable
 {
     int size;
     int count;
-    KeyValuePair **items;
-} HashTable;
+    kv_pair_t **items;
+};
 
-HashTable *new_hash_table();
-void delete_hash_table(HashTable *ht);
+hash_table_t *create_hash_table();
+void delete_hash_table(hash_table_t *ht);
 
-void insert_kv_pair(HashTable *ht, const char *key, const char *value);
-char *search_kv_pair(HashTable *ht, const char *key);
-void delete_kv_pair(HashTable *ht, const char *key);
+void hash_table_insert(hash_table_t *ht, const char *key, const char *value);
+char *hash_table_search(hash_table_t *ht, const char *key);
+void hash_table_remove(hash_table_t *ht, const char *key);
