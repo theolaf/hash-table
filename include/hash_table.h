@@ -4,18 +4,18 @@ typedef struct
 {
     char *key;
     char *value;
-} kv_pair;
+} KeyValuePair;
 
 typedef struct
 {
     int size;
     int count;
-    kv_pair **items;
-} hash_table;
+    KeyValuePair **items;
+} HashTable;
 
-hash_table *new_hash_table();
-void delete_hash_table(hash_table *ht);
+HashTable *new_hash_table();
+void delete_hash_table(HashTable *ht);
 
-void insert_kv_pair(hash_table *ht, const char *key, const char *value);
-char *search_kv_pair(hash_table *ht, const char *key);
-void delete_kv_pair(hash_table *ht, const char *key);
+void insert_kv_pair(HashTable *ht, const char *key, const char *value);
+char *search_kv_pair(HashTable *ht, const char *key);
+void delete_kv_pair(HashTable *ht, const char *key);

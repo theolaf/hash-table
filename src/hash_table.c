@@ -6,11 +6,11 @@
 
 #include "utils.h"
 
-static kv_pair DELETED_ITEM = {NULL, NULL};
+static KeyValuePair DELETED_ITEM = {NULL, NULL};
 
-static kv_pair *new_item(const char *k, const char *v)
+static KeyValuePair *new_item(const char *k, const char *v)
 {
-    kv_pair *i = malloc(sizeof(kv_pair));
+    KeyValuePair *i = malloc(sizeof(KeyValuePair));
 
     i->key = strdup(k);
     i->value = strdup(v);
@@ -18,29 +18,29 @@ static kv_pair *new_item(const char *k, const char *v)
     return i;
 }
 
-static void delete_item(kv_pair *i)
+static void delete_item(KeyValuePair *i)
 {
     free(i->key);
     free(i->value);
     free(i);
 }
 
-hash_table *new_hash_table()
+HashTable *new_hash_table()
 {
-    hash_table *ht = malloc(sizeof(hash_table));
+    HashTable *ht = malloc(sizeof(HashTable));
 
     ht->size = 53;
     ht->count = 0;
-    ht->items = calloc((size_t)ht->size, sizeof(kv_pair *));
+    ht->items = calloc((size_t)ht->size, sizeof(KeyValuePair *));
 
     return ht;
 }
 
-void delete_hash_table(hash_table *ht)
+void delete_hash_table(HashTable *ht)
 {
     for (int i = 0; i < ht->size; i++)
     {
-        kv_pair *item = ht->items[i];
+        KeyValuePair *item = ht->items[i];
         if (item && item != &DELETED_ITEM)
         {
             delete_item(item);
@@ -51,10 +51,10 @@ void delete_hash_table(hash_table *ht)
     free(ht);
 }
 
-void insert_kv_pair(hash_table *ht, const char *key, const char *value)
+void insert_kv_pair(HashTable *ht, const char *key, const char *value)
 {
-    kv_pair *item = new_item(key, value);
-    kv_pair *current_item;
+    KeyValuePair *item = new_item(key, value);
+    KeyValuePair *current_item;
     int i = 0, index;
 
     do
@@ -80,10 +80,10 @@ void insert_kv_pair(hash_table *ht, const char *key, const char *value)
     ht->count++;
 }
 
-char *search_kv_pair(hash_table *ht, const char *key)
+char *search_kv_pair(HashTable *ht, const char *key)
 {
     int index = get_key_hash(key, ht->size, 0);
-    kv_pair *item = ht->items[index];
+    KeyValuePair *item = ht->items[index];
     int i = 1;
 
     while (item)
@@ -101,10 +101,10 @@ char *search_kv_pair(hash_table *ht, const char *key)
     return NULL;
 }
 
-void delete_kv_pair(hash_table *ht, const char *key)
+void delete_kv_pair(HashTable *ht, const char *key)
 {
     int index = get_key_hash(key, ht->size, 0);
-    kv_pair *item = ht->items[index];
+    KeyValuePair *item = ht->items[index];
     int i = 1;
     bool key_found = false;
 

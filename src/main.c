@@ -5,7 +5,7 @@
 int main()
 {
     printf("Creating empty hash table...\n");
-    hash_table *ht = new_hash_table();
+    HashTable *ht = new_hash_table();
     printf("Table size: %d\n", ht->size);
     printf("Table count: %d\n", ht->count);
 
