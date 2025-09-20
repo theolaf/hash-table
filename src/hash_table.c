@@ -7,6 +7,7 @@
 #include "utils.h"
 
 static kv_pair_t DELETED_ITEM = {NULL, NULL};
+const int HT_BASE_SIZE = 47;
 
 static kv_pair_t *create_kv_pair(const char *k, const char *v)
 {
@@ -25,11 +26,11 @@ static void delete_kv_pair(kv_pair_t *i)
     free(i);
 }
 
-hash_table_t *create_hash_table()
+hash_table_t *create_hash_table(const int size)
 {
     hash_table_t *ht = malloc(sizeof(hash_table_t));
 
-    ht->size = 53;
+    ht->size = next_prime(size);
     ht->count = 0;
     ht->items = calloc((size_t)ht->size, sizeof(kv_pair_t *));
 

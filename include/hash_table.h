@@ -16,7 +16,9 @@ struct HashTable
     kv_pair_t **items;
 };
 
-hash_table_t *create_hash_table();
+const int HT_BASE_SIZE;
+
+hash_table_t *create_hash_table(const int size);
 void delete_hash_table(hash_table_t *ht);
 
 void hash_table_insert(hash_table_t *ht, const char *key, const char *value);
