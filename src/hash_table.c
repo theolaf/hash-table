@@ -7,6 +7,8 @@
 #include "utils.h"
 
 static kv_pair_t DELETED_ITEM = {NULL, NULL};
+static const float UPSIZE_TRIGGER = .7;
+static const float DOWNSIZE_TRIGGER = .1;
 const int HT_BASE_SIZE = 47;
 
 static kv_pair_t *create_kv_pair(const char *k, const char *v)
@@ -24,6 +26,35 @@ static void delete_kv_pair(kv_pair_t *i)
     free(i->key);
     free(i->value);
     free(i);
+}
+
+static void resize_hash_table(hash_table_t *ht, const int size)
+{
+    if (size < HT_BASE_SIZE)
+    {
+        return;
+    }
+
+    hash_table_t *new_ht = create_hash_table(size);
+
+    for (int i = 0; i < ht->size; i++)
+    {
+        kv_pair_t *item = ht->items[i];
+        if (item && item != &DELETED_ITEM)
+        {
+            hash_table_insert(new_ht, item->key, item->value);
+        }
+    }
+
+    int tmp_size = new_ht->size;
+    new_ht->size = ht->size;
+    ht->size = tmp_size;
+
+    kv_pair_t **tmp_items = new_ht->items;
+    new_ht->items = ht->items;
+    ht->items = tmp_items;
+
+    delete_hash_table(new_ht);
 }
 
 hash_table_t *create_hash_table(const int size)
@@ -64,7 +95,7 @@ void hash_table_insert(hash_table_t *ht, const char *key, const char *value)
         current_item = ht->items[index];
         i++;
 
-        if (!current_item)
+        if (!current_item || current_item == &DELETED_ITEM)
         { // if current item does not exist, no need for the check below
             continue;
         }
@@ -79,6 +110,13 @@ void hash_table_insert(hash_table_t *ht, const char *key, const char *value)
 
     ht->items[index] = item;
     ht->count++;
+
+    float load = (float)ht->count / ht->size;
+
+    if (load > UPSIZE_TRIGGER)
+    {
+        resize_hash_table(ht, ht->size * 2);
+    }
 }
 
 char *hash_table_search(hash_table_t *ht, const char *key)
@@ -109,7 +147,7 @@ void hash_table_remove(hash_table_t *ht, const char *key)
     int i = 1;
     bool key_found = false;
 
-    while (item)
+    while (item && item != &DELETED_ITEM)
     {
         if (strcmp(item->key, key) == 0)
         {
@@ -126,5 +164,12 @@ void hash_table_remove(hash_table_t *ht, const char *key)
     if (key_found)
     {
         ht->count--;
+    }
+
+    float load = (float)ht->count / ht->size;
+
+    if (load < DOWNSIZE_TRIGGER)
+    {
+        resize_hash_table(ht, ht->size / 2);
     }
 }
