@@ -13,10 +13,26 @@ const int HT_BASE_SIZE = 47;
 
 static kv_pair_t *create_kv_pair(const char *k, const char *v)
 {
+    // Allocate memory for the KVPair struct
     kv_pair_t *i = malloc(sizeof(kv_pair_t));
+    if (i == NULL) {
+        return NULL;  // malloc failed
+    }
 
+    // Allocate and copy the key string
     i->key = strdup(k);
+    if (i->key == NULL) {
+        free(i);  // Clean up struct if strdup fails
+        return NULL;
+    }
+
+    // Allocate and copy the value string
     i->value = strdup(v);
+    if (i->value == NULL) {
+        free(i->key);  // Clean up key
+        free(i);        // Clean up struct
+        return NULL;
+    }
 
     return i;
 }
@@ -36,6 +52,10 @@ static void resize_hash_table(hash_table_t *ht, const int size)
     }
 
     hash_table_t *new_ht = create_hash_table(size);
+    // If allocation failed, keep using the current table
+    if (new_ht == NULL) {
+        return;
+    }
 
     for (int i = 0; i < ht->size; i++)
     {
@@ -59,11 +79,21 @@ static void resize_hash_table(hash_table_t *ht, const int size)
 
 hash_table_t *create_hash_table(const int size)
 {
+    // Allocate memory for the HashTable struct
     hash_table_t *ht = malloc(sizeof(hash_table_t));
+    if (ht == NULL) {
+        return NULL;  // malloc failed
+    }
 
     ht->size = next_prime(size);
     ht->count = 0;
+
+    // Allocate and zero-initialize the items array
     ht->items = calloc((size_t)ht->size, sizeof(kv_pair_t *));
+    if (ht->items == NULL) {
+        free(ht);  // Clean up table if calloc fails
+        return NULL;
+    }
 
     return ht;
 }
@@ -86,6 +116,10 @@ void delete_hash_table(hash_table_t *ht)
 void hash_table_insert(hash_table_t *ht, const char *key, const char *value)
 {
     kv_pair_t *item = create_kv_pair(key, value);
+    // If allocation failed, we cannot insert
+    if (item == NULL) {
+        return;  // Silently fail - caller can retry or handle error
+    }
     kv_pair_t *current_item;
     int i = 0, index;
 
