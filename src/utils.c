@@ -6,15 +6,18 @@
 
 static int hash(const char *string, const int prime, const int num_buckets)
 {
+    // Use rolling hash to avoid overflow from pow()
+    // Equivalent to: Σ(prime^(length-i-1) * string[i]) % num_buckets
+    // But computed iteratively to prevent integer overflow
     long hashed = 0;
     const int string_length = strlen(string);
 
     for (int i = 0; i < string_length; i++)
     {
-        hashed += (long)pow(prime, string_length - (i + 1)) * string[i];
+        hashed = (hashed * prime + string[i]) % num_buckets;
     }
 
-    return (int)(hashed % num_buckets);
+    return (int)hashed;
 }
 
 int get_hash(const char *key, const int num_buckets, const int retries)
