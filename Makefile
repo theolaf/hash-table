@@ -7,7 +7,7 @@ TARGET = build/main.o
 
 build:
 	mkdir -p build
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRC) -lm
 
 build-debug:
 	mkdir -p build

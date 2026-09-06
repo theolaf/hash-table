@@ -16,7 +16,7 @@ struct HashTable
     kv_pair_t **items;
 };
 
-const int HT_BASE_SIZE;
+extern const int HT_BASE_SIZE;
 
 hash_table_t *create_hash_table(const int size);
 void delete_hash_table(hash_table_t *ht);
