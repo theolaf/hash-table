@@ -127,7 +127,7 @@ char *hash_table_search(hash_table_t *ht, const char *key)
 
     while (item)
     {
-        if (strcmp(item->key, key) == 0)
+        if (item != &DELETED_ITEM && strcmp(item->key, key) == 0)
         {
             return item->value;
         }
@@ -147,13 +147,14 @@ void hash_table_remove(hash_table_t *ht, const char *key)
     int i = 1;
     bool key_found = false;
 
-    while (item && item != &DELETED_ITEM)
+    while (item)
     {
-        if (strcmp(item->key, key) == 0)
+        if (item != &DELETED_ITEM && strcmp(item->key, key) == 0)
         {
             delete_kv_pair(item);
             ht->items[index] = &DELETED_ITEM;
             key_found = true;
+            break;
         }
 
         index = get_hash(key, ht->size, i);
