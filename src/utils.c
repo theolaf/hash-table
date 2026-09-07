@@ -27,6 +27,40 @@ int get_hash(const char *key, const int num_buckets, const int retries)
     return (hashed_a + (retries * (hashed_b + 1))) % num_buckets;
 }
 
+// Generic hash for strings (wraps get_hash)
+unsigned long hash_string(void *key, int num_buckets, int retries)
+{
+    const char *str = (const char *)key;
+    return (unsigned long)get_hash(str, num_buckets, retries);
+}
+
+// Hash for integers
+unsigned long hash_int(void *key, int num_buckets, int retries)
+{
+    int *val = (int *)key;
+    unsigned long h1 = (unsigned long)(*val) % num_buckets;
+    unsigned long h2 = 1; // Secondary hash for probing
+    return (h1 + (retries * (h2 + 1))) % num_buckets;
+}
+
+// Comparison for strings
+int compare_string(void *a, void *b)
+{
+    const char *str_a = (const char *)a;
+    const char *str_b = (const char *)b;
+    return strcmp(str_a, str_b);
+}
+
+// Comparison for integers
+int compare_int(void *a, void *b)
+{
+    int *int_a = (int *)a;
+    int *int_b = (int *)b;
+    if (*int_a < *int_b) return -1;
+    if (*int_a > *int_b) return 1;
+    return 0;
+}
+
 static bool is_prime(const int x)
 {
     // Handle edge cases: 0 and 1 are not prime, 2 and 3 are prime
