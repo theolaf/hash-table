@@ -3,7 +3,7 @@ CFLAGS = -Iinclude
 SRC = src/main.c src/hash_table.c src/utils.c
 TARGET = build/main.o
 
-.PHONY: build build-debug run debugger clean
+.PHONY: build build-debug run debugger clean python-build python-install python-test python-clean
 
 build:
 	mkdir -p build
@@ -21,3 +21,16 @@ debugger:
 
 clean:
 	rm -rf build
+
+# Python extension build targets
+python-build:
+	cd python && python setup.py build_ext --inplace
+
+python-install:
+	cd python && pip install -e .
+
+python-test:
+	cd python && python test_hashtable.py
+
+python-clean:
+	cd python && rm -rf build/ dist/ __pycache__/ *.so _hashtable*.pyd
